@@ -189,7 +189,7 @@ function startGame() {
    ===================================================== */
 function generaLivello() {
     tentativi = 3;
-    distanzaSx = Math.floor(Math.random() * 6) + 3;
+    distanzaSx = -( Math.floor(Math.random() * 6) + 3);
 
     document.getElementById("livello").textContent = livello;
     document.getElementById("tentativi").textContent = tentativi;
