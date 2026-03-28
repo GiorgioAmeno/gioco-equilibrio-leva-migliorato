@@ -5,6 +5,9 @@
 <title>Gioco Didattico - Equilibrio della Leva</title>
 
 <style>
+/* ===============================
+   STILE GENERALE
+   =============================== */
 body {
     font-family: Arial, sans-serif;
     background: #f2f2f2;
@@ -16,11 +19,16 @@ body {
     display: none;
 }
 
+/* ===============================
+   LEVA E STRUTTURA
+   =============================== */
 .leva-container {
     width: 600px;
     margin: 40px auto;
+    position: relative;
 }
 
+/* Asta della leva */
 .leva {
     position: relative;
     width: 600px;
@@ -30,6 +38,7 @@ body {
     transition: transform 0.5s;
 }
 
+/* Fulcro centrale */
 .fulcro {
     position: absolute;
     left: 50%;
@@ -42,6 +51,27 @@ body {
     transform: translateX(-50%);
 }
 
+/* ===============================
+   TACCHETTE DI RIFERIMENTO
+   =============================== */
+.tacchette {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    height: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tacca {
+    width: 2px;
+    height: 15px;
+    background: #777;
+}
+
+/* ===============================
+   PESI
+   =============================== */
 .peso {
     position: absolute;
     top: -40px;
@@ -60,6 +90,9 @@ body {
     background: #2196F3;
 }
 
+/* ===============================
+   CONTROLLI E INFO
+   =============================== */
 .controlli {
     margin-top: 20px;
 }
@@ -79,31 +112,58 @@ button {
 
 <body>
 
-<!-- PAGINA INTRODUTTIVA -->
+<!-- ===============================
+     PAGINA INTRODUTTIVA
+     =============================== -->
 <div id="intro">
     <h1>⚙️ Equilibrio della Leva</h1>
     <p>
-        In questo laboratorio virtuale dovrai applicare i principi
-        dell’equilibrio delle leve.<br><br>
-        Osserva il peso assegnato e trova la combinazione corretta
-        di peso e distanza per bilanciare la leva.
+        Questo gioco simula una semplice leva da laboratorio.<br><br>
+        Usa i riferimenti sulla leva per scegliere correttamente
+        peso e distanza e raggiungere l’equilibrio.
     </p>
     <button onclick="startGame()">Inizia</button>
 </div>
 
-<!-- GIOCO -->
+<!-- ===============================
+     AREA DI GIOCO
+     =============================== -->
 <div id="game" class="hidden">
 
     <h2>Livello <span id="livello">1</span> / 3</h2>
 
     <div class="leva-container">
+
+        <!-- Leva -->
         <div class="leva" id="leva">
+
+            <!-- Fulcro -->
             <div class="fulcro"></div>
+
+            <!-- Tacchette di riferimento -->
+            <div class="tacchette">
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+                <div class="tacca"></div>
+            </div>
+
+            <!-- Pesi -->
             <div class="peso sinistra" id="pesoSx"></div>
             <div class="peso destra" id="pesoDx">?</div>
         </div>
     </div>
 
+    <!-- Controlli utente -->
     <div class="controlli">
         <label>Peso a destra (kg):</label>
         <input type="number" id="peso" min="1" max="20" value="5"><br><br>
@@ -114,38 +174,53 @@ button {
         <button onclick="verifica()">Verifica</button>
     </div>
 
+    <!-- Informazioni -->
     <div class="info">
-        Tentativi rimasti: <span id="tentativi">3</span>
+        Tentativi rimasti: <span id="tentativi">5</span>
     </div>
 
     <div class="info" id="messaggio"></div>
 </div>
 
-<!-- PAGINA FINALE -->
+<!-- ===============================
+     PAGINA FINALE
+     =============================== -->
 <div id="fine" class="hidden">
     <h1>🎉 Complimenti!</h1>
     <p>
-        Hai completato con successo tutti i livelli.<br><br>
-        Ora conosci il principio di equilibrio delle leve
-        e puoi applicarlo in laboratorio.
+        Hai superato tutti i livelli.<br><br>
+        Ora sei pronto a riconoscere
+        le condizioni di equilibrio di una leva reale.
     </p>
 </div>
 
 <script>
+/* ===============================
+   VARIABILI GLOBALI
+   =============================== */
 let livello = 1;
-let tentativi = 8;
+let tentativi = 5;
 
+// Peso fisso a sinistra
 let pesoSx = 10;
 let distanzaSx = 2;
 
+/* ===============================
+   AVVIO DEL GIOCO
+   =============================== */
 function startGame() {
     document.getElementById("intro").classList.add("hidden");
     document.getElementById("game").classList.remove("hidden");
     generaLivello();
 }
 
+/* ===============================
+   GENERAZIONE LIVELLO
+   =============================== */
 function generaLivello() {
-    tentativi = 3;
+    tentativi = 5;
+
+    // Posizione casuale del peso noto
     distanzaSx = Math.floor(Math.random() * 3) + 2;
 
     document.getElementById("livello").textContent = livello;
@@ -156,10 +231,14 @@ function generaLivello() {
     pesoSxEl.textContent = pesoSx + "kg";
     pesoSxEl.style.left = (300 - distanzaSx * 40) + "px";
 
+    // Reset leva
     document.getElementById("leva").style.transform = "rotate(0deg)";
     document.getElementById("pesoDx").textContent = "?";
 }
 
+/* ===============================
+   VERIFICA DELL’EQUILIBRIO
+   =============================== */
 function verifica() {
     const pesoDx = parseInt(document.getElementById("peso").value);
     const distanzaDx = parseInt(document.getElementById("distanza").value);
@@ -174,6 +253,7 @@ function verifica() {
     pesoDxEl.textContent = pesoDx + "kg";
     pesoDxEl.style.left = (300 + distanzaDx * 40) + "px";
 
+    // Controllo equilibrio
     if (momentoDx === momentoSx) {
         messaggio.textContent = "✅ Equilibrio raggiunto!";
         leva.style.transform = "rotate(0deg)";
@@ -189,9 +269,11 @@ function verifica() {
         tentativi--;
         document.getElementById("tentativi").textContent = tentativi;
 
+        // Inclinazione della leva
         leva.style.transform = momentoDx > momentoSx ? "rotate(-8deg)" : "rotate(8deg)";
         messaggio.textContent = "❌ Disequilibrio";
 
+        // Fine tentativi → ritorno al livello 1
         if (tentativi === 0) {
             livello = 1;
             setTimeout(generaLivello, 1000);
