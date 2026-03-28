@@ -5,9 +5,9 @@
 <title>Gioco Didattico - Equilibrio della Leva</title>
 
 <style>
-/* ===============================
+/* =====================================================
    STILE GENERALE
-   =============================== */
+   ===================================================== */
 body {
     font-family: Arial, sans-serif;
     background: #f2f2f2;
@@ -19,9 +19,9 @@ body {
     display: none;
 }
 
-/* ===============================
+/* =====================================================
    STRUTTURA LEVA
-   =============================== */
+   ===================================================== */
 .leva-container {
     width: 900px;
     margin: 40px auto;
@@ -51,9 +51,9 @@ body {
     transform: translateX(-50%);
 }
 
-/* ===============================
+/* =====================================================
    TACCHETTE
-   =============================== */
+   ===================================================== */
 .tacchette {
     position: absolute;
     top: 10px;
@@ -67,6 +67,7 @@ body {
     position: relative;
 }
 
+/* Linea verticale della tacca */
 .tacca::after {
     content: "";
     position: absolute;
@@ -78,15 +79,15 @@ body {
     transform: translateX(-50%);
 }
 
-/* Tacchetta del fulcro */
+/* Tacca del fulcro */
 .tacca.fulcro-tacca::after {
     height: 20px;
     background: #000;
 }
 
-/* ===============================
+/* =====================================================
    PESI
-   =============================== */
+   ===================================================== */
 .peso {
     position: absolute;
     top: -45px;
@@ -96,6 +97,7 @@ body {
     font-weight: bold;
     color: white;
     text-align: center;
+    transform: translateX(-50%); /* centra il peso sulla tacca */
 }
 
 .sinistra {
@@ -106,9 +108,9 @@ body {
     background: #2196F3;
 }
 
-/* ===============================
-   CONTROLLI
-   =============================== */
+/* =====================================================
+   CONTROLLI E INFO
+   ===================================================== */
 .controlli {
     margin-top: 20px;
 }
@@ -128,21 +130,21 @@ button {
 
 <body>
 
-<!-- ===============================
+<!-- =====================================================
      INTRODUZIONE
-     =============================== -->
+     ===================================================== -->
 <div id="intro">
     <h1>⚙️ Equilibrio della Leva</h1>
     <p>
-        Usa le tacchette come riferimento per determinare la distanza dal fulcro.<br>
-        Ricorda: l’equilibrio si ha quando i momenti delle forze sono uguali.
+        Usa le tacchette come riferimento per misurare la distanza dal fulcro.<br>
+        In caso di errore verrà mostrato il calcolo dei momenti.
     </p>
     <button onclick="startGame()">Inizia</button>
 </div>
 
-<!-- ===============================
-     GIOCO
-     =============================== -->
+<!-- =====================================================
+     AREA DI GIOCO
+     ===================================================== -->
 <div id="game" class="hidden">
 
     <h2>Livello <span id="livello">1</span> / 3</h2>
@@ -153,9 +155,8 @@ button {
             <!-- Fulcro -->
             <div class="fulcro"></div>
 
-            <!-- Tacchette -->
+            <!-- Tacchette: 12 a sinistra + fulcro + 12 a destra -->
             <div class="tacchette">
-                <!-- 12 sinistra + fulcro + 12 destra -->
                 <script>
                     for (let i = 0; i < 25; i++) {
                         if (i === 12) {
@@ -184,72 +185,78 @@ button {
         <button onclick="verifica()">Verifica</button>
     </div>
 
+    <!-- Info -->
     <div class="info">
-        Tentativi rimasti: <span id="tentativi">5</span>
+        Tentativi rimasti: <span id="tentativi">3</span>
     </div>
 
     <div class="info" id="messaggio"></div>
 </div>
 
-<!-- ===============================
-     FINALE
-     =============================== -->
+<!-- =====================================================
+     PAGINA FINALE
+     ===================================================== -->
 <div id="fine" class="hidden">
     <h1>🎉 Complimenti!</h1>
     <p>
-        Hai completato tutti i livelli.<br>
-        Hai applicato correttamente il principio dei momenti.
+        Hai completato tutti i livelli applicando correttamente
+        il principio dei momenti.
     </p>
 </div>
 
 <script>
-/* ===============================
+/* =====================================================
    VARIABILI GLOBALI
-   =============================== */
+   ===================================================== */
 let livello = 1;
-let tentativi = 5;
+let tentativi = 3;
 
-const pesoSx = 10;
-let distanzaSx = 4;
+const pesoSx = 10;     // peso noto a sinistra
+let distanzaSx = 4;    // distanza casuale a sinistra
 
-const centro = 450;        // centro asta in px
-const passo = 35;          // distanza tra tacchette in px
+const centro = 450;    // centro dell’asta in px
+const passo = 36;      // distanza tra tacchette in px
 
-/* ===============================
-   AVVIO
-   =============================== */
+/* =====================================================
+   AVVIO DEL GIOCO
+   ===================================================== */
 function startGame() {
     document.getElementById("intro").classList.add("hidden");
     document.getElementById("game").classList.remove("hidden");
     generaLivello();
 }
 
-/* ===============================
-   NUOVO LIVELLO
-   =============================== */
+/* =====================================================
+   GENERAZIONE NUOVO LIVELLO
+   ===================================================== */
 function generaLivello() {
-    tentativi = 5;
+    tentativi = 3;
+
+    // distanza casuale del peso noto
     distanzaSx = Math.floor(Math.random() * 6) + 3;
 
     document.getElementById("livello").textContent = livello;
     document.getElementById("tentativi").textContent = tentativi;
-    document.getElementById("messaggio").textContent = "";
+    document.getElementById("messaggio").innerHTML = "";
 
+    // posizionamento peso sinistro sulla tacca corretta
     const pesoSxEl = document.getElementById("pesoSx");
     pesoSxEl.textContent = pesoSx + "kg";
-    pesoSxEl.style.left = (centro - distanzaSx * passo) + "px";
+    pesoSxEl.style.left = centro - distanzaSx * passo + "px";
 
+    // reset leva e peso destro
     document.getElementById("leva").style.transform = "rotate(0deg)";
     document.getElementById("pesoDx").textContent = "?";
 }
 
-/* ===============================
-   VERIFICA EQUILIBRIO
-   =============================== */
+/* =====================================================
+   VERIFICA DELL’EQUILIBRIO
+   ===================================================== */
 function verifica() {
     const pesoDx = parseInt(document.getElementById("peso").value);
     const distanzaDx = parseInt(document.getElementById("distanza").value);
 
+    // calcolo dei momenti
     const momentoSx = pesoSx * distanzaSx;
     const momentoDx = pesoDx * distanzaDx;
 
@@ -259,9 +266,11 @@ function verifica() {
     const messaggio = document.getElementById("messaggio");
     const pesoDxEl = document.getElementById("pesoDx");
 
+    // posizionamento peso destro sulla tacca corretta
     pesoDxEl.textContent = pesoDx + "kg";
-    pesoDxEl.style.left = (centro + distanzaDx * passo) + "px";
+    pesoDxEl.style.left = centro + distanzaDx * passo + "px";
 
+    // controllo equilibrio
     if (differenza === 0) {
         messaggio.textContent = "✅ Equilibrio raggiunto!";
         leva.style.transform = "rotate(0deg)";
@@ -277,15 +286,20 @@ function verifica() {
         tentativi--;
         document.getElementById("tentativi").textContent = tentativi;
 
-        /* Angolo proporzionale al disequilibrio */
+        // inclinazione proporzionale al disequilibrio
         let angolo = Math.max(Math.min(differenza * 0.4, 12), -12);
         leva.style.transform = `rotate(${angolo}deg)`;
 
-        messaggio.textContent = "❌ Disequilibrio";
+        // mostra calcolo dei momenti
+        messaggio.innerHTML =
+            "❌ Disequilibrio<br>" +
+            "Momento sinistro = " + pesoSx + " × " + distanzaSx + " = " + momentoSx + "<br>" +
+            "Momento destro = " + pesoDx + " × " + distanzaDx + " = " + momentoDx;
 
+        // fine tentativi → ritorno al livello 1
         if (tentativi === 0) {
             livello = 1;
-            setTimeout(generaLivello, 1000);
+            setTimeout(generaLivello, 1500);
         }
     }
 }
